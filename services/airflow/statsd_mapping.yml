@@ -1,0 +1,6 @@
+mappings:
+  - match: "airflow.*"
+    name: "${1}"
+    labels:
+      service: "airflow"
+    action: "map"
