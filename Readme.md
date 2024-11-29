@@ -51,6 +51,7 @@ project-root/
 │   │   ├── promtail-config.yml
 │   │   ├── requirements.txt
 │   │   ├── statsd_mapping.yml
+│   │   ├── Readme.md
 │   │   ├── Dockerfile
 │   │   ├── dags/
 │   │   │   ├── dbt/                     # DBT-related files (models, transformations)
@@ -59,27 +60,45 @@ project-root/
 │   │   └── plugins/                     # Airflow plugins directory
 │   ├── kafka/
 │   │   └── docker-compose.kafka.yml     # Kafka Docker Compose configuration
+│   │   ├── Readme.md
 │   ├── vaultwarden/
 │   │   └── docker-compose.vaultwarden.yml
+│   │   ├── Readme.md
 │   ├── zookeeper/
 │   │   └── docker-compose.zookeeper.yml  # Zookeeper Docker Compose configuration
+│   │   ├── Readme.md
 │   ├── debezium/
 │   │   ├── docker-compose.debezium.yml   # Debezium Docker Compose configuration
 │   │   ├── debezium-postgresql-connector.json  # PostgreSQL connector configuration for Debezium
 │   ├── apache-spark/
 │   │   └── docker-compose.spark.yml
+│   │   ├── Readme.md
 │   ├── airbyte/
 │   │   └── docker-compose.airbyte.yml
 ├── terraform/                         # Terraform configurations
-│   ├── google_cloud/
+│   ├── aws/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   │   ├── provider.tf
+│   │   ├── terraform.tfvars
+│   │   ├── Readme.md
 │   ├── digitalocean/
-│   └── heroku/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   │   ├── provider.tf
+│   │   ├── terraform.tfvars
+│   │   ├── Readme.md
 ├── postgres/                          # PostgreSQL configs
-│   └── enable_logical_replication.sql  # PostgreSQL script to enable logical replication
+│   └── enable_logical_replication.sql
+│   ├── pg_hba.conf
+│   ├── postgresql.conf
+│   ├── Readme.md
 └── README.md
-|
+├── docker-compose.yaml
+└── tc4a-data-infrastructure.png
 ```
-
 ---
 
 ## Tools and Technologies
