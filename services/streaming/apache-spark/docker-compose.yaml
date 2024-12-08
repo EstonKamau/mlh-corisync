@@ -6,14 +6,18 @@ services:
     container_name: spark-master
     hostname: spark-master
     ports:
-      - "8080:8080"  # Spark master web UI
-      - "7077:7077"  # Spark master RPC
+      - "8081:8080"  # Spark Master Web UI
+      - "7077:7077"  # Spark Master RPC Port
     environment:
       - SPARK_MODE=master
       - SPARK_RPC_AUTHENTICATION_ENABLED=no
       - SPARK_RPC_ENCRYPTION_ENABLED=no
       - SPARK_LOCAL_DIRS=/tmp
       - SPARK_LOG_LEVEL=WARN
+    networks:
+      - app-network
+    volumes:
+      - ./apps:/opt/spark-apps 
 
   spark-worker-1:
     image: bitnami/spark:latest
@@ -24,9 +28,10 @@ services:
       - SPARK_MASTER_URL=spark://spark-master:7077
       - SPARK_WORKER_MEMORY=1G
       - SPARK_WORKER_CORES=1
-      - SPARK_WORKER_PORT=8881
     depends_on:
       - spark-master
+    networks:
+      - app-network
 
   spark-worker-2:
     image: bitnami/spark:latest
@@ -37,15 +42,21 @@ services:
       - SPARK_MASTER_URL=spark://spark-master:7077
       - SPARK_WORKER_MEMORY=1G
       - SPARK_WORKER_CORES=1
-      - SPARK_WORKER_PORT=8882
     depends_on:
       - spark-master
+    networks:
+      - app-network
 
   spark-submit:
     image: bitnami/spark:latest
     container_name: spark-submit
     hostname: spark-submit
+    command: ["bash", "-c", "tail -f /dev/null"]  # Keeps the container running
     environment:
       - SPARK_MASTER_URL=spark://spark-master:7077
     depends_on:
       - spark-master
+    networks:
+      - app-network
+    volumes:
+      - ./apps:/opt/spark-apps   # Mount your job scripts directory

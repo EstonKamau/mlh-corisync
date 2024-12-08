@@ -1,4 +1,5 @@
 # Use an Airflow image with Python 3.10
+FROM ubuntu:latest
 FROM apache/airflow:2.10.2-python3.10
 
 # Set environment variables
@@ -27,10 +28,8 @@ RUN pip3 install statsd
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY init_config.sh /usr/local/bin/init_config.sh
 
-# Ensure entrypoint script is executable (run on host before build)
-# The script should already be executable if you've done this:
-# chmod +x entrypoint.sh
-# chmod +x init_config.sh
+
+
 
 # Ensure permissions are set properly
 USER airflow

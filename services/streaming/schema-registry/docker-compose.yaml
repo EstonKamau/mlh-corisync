@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  schema-registry:
+    image: confluentinc/cp-schema-registry:latest
+    environment:
+      - SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL=zookeeper:2181
+      - SCHEMA_REGISTRY_HOST_NAME=schema-registry
+      - SCHEMA_REGISTRY_LISTENERS=http://schema-registry:8081,http://localhost:8081
+    ports:
+      - 8081:8081
+    depends_on:
+      - zookeeper,kafka
+    networks:
+      - app-network
+    
