@@ -15,7 +15,7 @@ services:
       - SPARK_LOCAL_DIRS=/tmp
       - SPARK_LOG_LEVEL=WARN
     networks:
-      - app-network
+      app-network:
     volumes:
       - ./apps:/opt/spark-apps 
 
@@ -31,7 +31,7 @@ services:
     depends_on:
       - spark-master
     networks:
-      - app-network
+      app-network:
 
   spark-worker-2:
     image: bitnami/spark:latest
@@ -45,7 +45,7 @@ services:
     depends_on:
       - spark-master
     networks:
-      - app-network
+      app-network:
 
   spark-submit:
     image: bitnami/spark:latest
@@ -57,6 +57,6 @@ services:
     depends_on:
       - spark-master
     networks:
-      - app-network
+      app-network:
     volumes:
       - ./apps:/opt/spark-apps   # Mount your job scripts directory

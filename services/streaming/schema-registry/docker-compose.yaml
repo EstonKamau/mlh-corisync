@@ -8,9 +8,10 @@ services:
       - SCHEMA_REGISTRY_HOST_NAME=schema-registry
       - SCHEMA_REGISTRY_LISTENERS=http://schema-registry:8081,http://localhost:8081
     ports:
-      - 8081:8081
+      - 8086:8086
     depends_on:
-      - zookeeper,kafka
+      - zookeeper
+      - kafka
     networks:
-      - app-network
+      app-network:
     

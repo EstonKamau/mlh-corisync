@@ -2,33 +2,32 @@ version: '3.8'
 
 services:
   kafka:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:7.4.0
     container_name: kafka
+    hostname: kafka
     ports:
-      - "29092:29092"
+      - '29092:29092'
+      - '9092:9092'
+      - '9101:9101'
     environment:
       KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
-      KAFKA_LISTENER_SECURITY_PROTOCAL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-    volumes:
-      - ./kafka/config/server.properties:/etc/kafka/config/
-    depends_on:
-      - zookeeper
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_JMX_PORT: 9101
+      KAFKA_JMX_HOSTNAME: localhost
+    healthcheck:
+      test: nc -z localhost 9092 || exit -1
+      start_period: 15s
+      interval: 5s
+      timeout: 10s
+      retries: 10
     networks:
-      - app-network
+      app-network:
 
-  kafka_manager:
-    image: hlebalbau/kafka_manager:stable
-    restart: always
-    ports:
-      - 9000:9000
-    depends_on:
-      - zookeeper
-      - kafka
-    environment:
-      ZK_HOSTS: "zookeerper:2181"
-      APPLICATION_SECRETL: "tc4a_secret"
-    command: 
-      - Dpidfile.path=/dev/null
+
