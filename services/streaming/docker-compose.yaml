@@ -16,16 +16,17 @@ services:
   postgresql-init:
     image: postgres:alpine
     container_name: postgresql-init
-    volumnes:
+    volumes:
       - ./configs/.env:/configs/.env
+      - ../../configs/postgresl/enable_logical_replication.sql:/scripts/enable_logical_replication.sql
+      - ./main_entry_point.sh:/main_entry_point.sh
     environment:
       POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PORT:  ${POSTGRES_PORT}
       POSTGRES_USER:  ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DATABASE: ${POSTGRES_DATABASE}
-    volumes:
-      - ./main_entry_point.sh:/main_entry_point.sh
+      
     entrypoint: ["/main_entry_point.sh"]
     networks:
       - app-network
@@ -40,7 +41,7 @@ include:
   - ./schema-registry/docker-compose.yaml
   # - ./kafka-manager/docker-compose.yaml
   - ./apache-spark/docker-compose.yaml
-  - ../security/vaultwarden/docker-compose.yaml
+  # - ../security/vaultwarden/docker-compose.yaml
 
 
 networks:

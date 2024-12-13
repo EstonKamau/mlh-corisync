@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   debezium:
-    image: debezium/connect:2.7.3.Final
+    image: debezium/connect:1.9.7.Final
     container_name: debezium
     hostname: debezium
     depends_on:

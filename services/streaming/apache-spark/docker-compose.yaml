@@ -17,7 +17,9 @@ services:
     networks:
       app-network:
     volumes:
-      - ./apps:/opt/spark-apps 
+      - ./apps:/opt/spark-apps
+      - ./apps/process_data.py:/opt/spark-apps/process_data.py
+      - ./apps/jars/spark-sql-kafka-0-10_2.12-3.2.1.jar/:/opt/spark-apps/jars/spark-sql-kafka-0-10_2.12-3.2.1.jar
 
   spark-worker-1:
     image: bitnami/spark:latest
@@ -51,12 +53,13 @@ services:
     image: bitnami/spark:latest
     container_name: spark-submit
     hostname: spark-submit
-    command: ["bash", "-c", "tail -f /dev/null"]  # Keeps the container running
+    command: ["bash", "-c", "tail -f /dev/null"]
     environment:
       - SPARK_MASTER_URL=spark://spark-master:7077
     depends_on:
       - spark-master
     networks:
-      app-network:
+      - app-network
     volumes:
-      - ./apps:/opt/spark-apps   # Mount your job scripts directory
+      - ./apps:/opt/spark-apps
+      - ./apps/process_data.py:/opt/spark-apps/process_data.py
