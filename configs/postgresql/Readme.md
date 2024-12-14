@@ -30,7 +30,29 @@ This folder contains files to configure PostgreSQL for logical replication and e
      host    replication     all             0.0.0.0/0               md5
      host    all             all             0.0.0.0/0               md5
      ```
+---
+### Postgres user settings
 
+For RDS instances:
+- Create a new user `replication_user`
+- GRANT replication abilities to user:
+   ```
+   GRANT rds_replication TO replication_user;
+   ```
+---
+
+### Create replication and publication
+
+-  Replication slot
+
+`SELECT * FROM pg_create_logical_replication_slot('debezium_slot', 'pgoutput');`
+
+- Publication
+
+`CREATE PUBLICATION dbz_publication FOR ALL TABLES;`
+
+
+---
 ## Usage
 
 ### Option 1: Apply Configurations Dynamically

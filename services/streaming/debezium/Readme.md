@@ -38,7 +38,7 @@ This folder contains a `docker-compose.yml` file to run a Debezium container con
     "database.server.name": "db_server",
     "plugin.name": "pgoutput",
     "slot.name": "debezium_slot",
-    "publication.name": "debezium_publication"
+    "publication.name": "dbz_publication"
   }
 }
 ```
