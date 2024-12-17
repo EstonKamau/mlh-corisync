@@ -20,7 +20,7 @@ jobs:
 
     - name: Deploy to Droplet
       run: |
-        ssh -o StrictHostKeyChecking=no user@your_droplet_ip << 'EOF'
+        ssh -o StrictHostKeyChecking=no root@137.184.231.165<< 'EOF'
           # Make sure Docker and Docker Compose are installed
           if ! command -v docker &> /dev/null
           then
