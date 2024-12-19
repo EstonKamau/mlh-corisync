@@ -14,7 +14,7 @@ date_suffix = datetime.datetime.now().strftime("%Y%m%d")
 
 # Kafka configuration
 KAFKA_BROKER = "localhost:9092" 
-KAFKA_TOPIC = "your_topic_name"
+KAFKA_TOPIC = "tc4a"
 
 # Initialize Spark session with BigQuery support
 spark = SparkSession.builder \
