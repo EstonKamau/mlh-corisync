@@ -22,7 +22,6 @@ include:
   - ./schema-registry/docker-compose.yaml
   # - ./kafka-manager/docker-compose.yaml
   - ./apache-spark/docker-compose.yaml
-  # - ../security/vaultwarden/docker-compose.yaml
 
 
 networks:
