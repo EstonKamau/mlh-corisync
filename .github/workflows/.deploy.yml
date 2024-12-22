@@ -4,11 +4,16 @@ on:
   push:
     branches:
       - main  # Trigger the workflow on changes to the `main` branch
+    paths:
+      - 'services/streaming/**'  # Trigger `deploy-streaming` only if changes are made in the streaming folder
+      - 'services/batch/airflow/**'  # Trigger `deploy-airflow` only if changes are made in the airflow folder
+      - 'services/security/vaultwarden/**'  # Trigger `deploy-security` only if changes are made in the security folder
 
 jobs:
   deploy-streaming:
     name: Deploy Streaming Services
     runs-on: ubuntu-20.04
+    if: github.event.head_commit.modified | contains('services/streaming')  # Only run if there are changes in the streaming folder
     steps:
       - name: Checkout code from GitHub
         uses: actions/checkout@v4
@@ -55,6 +60,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: deploy-streaming  # Ensures this job runs after deploy-streaming
     if: always()  # Runs even if the previous job fails
+    if: github.event.head_commit.modified | contains('services/batch/airflow')  # Only run if changes are in the airflow folder
     steps:
       - name: Set up SSH access
         run: |
@@ -76,6 +82,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: deploy-airflow  # Ensures this job runs after deploy-airflow
     if: always()  # Runs even if the previous job fails
+    if: github.event.head_commit.modified | contains('services/security/vaultwarden')  # Only run if changes are in the security folder
     steps:
       - name: Set up SSH access
         run: |

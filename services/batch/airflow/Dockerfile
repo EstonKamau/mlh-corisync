@@ -29,8 +29,6 @@ COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY init_config.sh /usr/local/bin/init_config.sh
 
 
-
-
 # Ensure permissions are set properly
 USER airflow
 
