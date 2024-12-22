@@ -60,7 +60,7 @@ jobs:
     name: Deploy Airflow Services
     runs-on: ubuntu-20.04
     needs: deploy-streaming  # Ensures this job runs after deploy-streaming
-    if: ${{ always() && github.event.head_commit.modified | contains('services/batch/airflow') }}  # Only run if changes are in the airflow folder
+    if: ${{ always() && (github.event.head_commit.modified | contains('services/batch/airflow')) }}  # Only run if changes are in the airflow folder
     steps:
       - name: Set up SSH access
         run: |
@@ -81,7 +81,7 @@ jobs:
     name: Deploy Security Services
     runs-on: ubuntu-20.04
     needs: deploy-airflow  # Ensures this job runs after deploy-airflow
-    if: ${{ always() && github.event.head_commit.modified | contains('services/security/vaultwarden') }}  # Only run if changes are in the security folder
+    if: ${{ always() && (github.event.head_commit.modified | contains('services/security/vaultwarden')) }}  # Only run if changes are in the security folder
     steps:
       - name: Set up SSH access
         run: |
@@ -102,7 +102,7 @@ jobs:
     name: Deploy Security Services
     runs-on: ubuntu-20.04
     needs: deploy-security  # Ensures this job runs after deploy-airflow
-    if: ${{ always() && github.event.head_commit.modified | contains('services/metabase') }}  # Only run if changes are in the security folder
+    if: ${{ always() && (github.event.head_commit.modified | contains('services/metabase')) }}  # Only run if changes are in the security folder
     steps:
       - name: Set up SSH access
         run: |
