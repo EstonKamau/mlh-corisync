@@ -115,4 +115,4 @@ docker-compose down
 - [Apache Airflow Documentation](https://airflow.apache.org/)
 - [Loki Documentation](https://grafana.com/oss/loki/)
 - [Prometheus Documentation](https://prometheus.io/docs/)
-- [Grafana Documentation](https://grafana.com/docs/).
+- [Grafana Documentation](https://grafana.com/docs/)

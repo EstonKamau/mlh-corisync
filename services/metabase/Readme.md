@@ -117,7 +117,7 @@ You can customize Metabase further by:
    - Check if the database is accessible from the Metabase container.
 
 2. **Port Conflicts:**
-   - Ensure no other service is using port `3000`. Update the port mapping in `docker-compose.yml` if needed.
+   - Ensure no other service is using port `3000`. Update to a suitable port mapping in `docker-compose.yml` if needed.
 
 3. **Logs:**
    - View container logs to debug issues:

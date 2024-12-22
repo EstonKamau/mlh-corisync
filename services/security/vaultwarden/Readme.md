@@ -86,4 +86,4 @@ ROCKET_TLS={certs="/path/to/certs.pem",key="/path/to/key.pem"}
 
 ## **References**
 - [Vaultwarden Documentation](https://github.com/dani-garcia/vaultwarden/wiki)
-- [Docker Hub: Vaultwarden](https://hub.docker.com/r/vaultwarden/server).
+- [Docker Hub: Vaultwarden](https://hub.docker.com/r/vaultwarden/server)
