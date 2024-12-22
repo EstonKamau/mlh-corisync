@@ -35,7 +35,7 @@ jobs:
           fi
           EOF
 
-      - name: Deploy application
+      - name: Intiate Streaming
         run: |
           ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
           cd ~/mlh-corisync/services/streaming
@@ -48,4 +48,12 @@ jobs:
           ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
           cd ~/mlh-corisync/services/streaming/debezium
           python3 create_connectors.py
+          EOF
+
+      - name: Initiate Airflow
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
+          cd ~/mlh-corisync/services/batch/airflow
+          docker-compose down
+          docker-compose up -d --build
           EOF
