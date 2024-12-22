@@ -35,14 +35,6 @@ jobs:
           fi
           EOF
 
-      - name: Intiate Security
-        run: |
-          ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
-          cd ~/mlh-corisync/services/security/vaultwarden
-          docker-compose down
-          docker-compose up -d --build
-          EOF
-
       - name: Intiate Streaming
         run: |
           ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
@@ -62,6 +54,14 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
           cd ~/mlh-corisync/services/batch/airflow
+          docker-compose down
+          docker-compose up -d --build
+          EOF
+      
+      - name: Intiate Security
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
+          cd ~/mlh-corisync/services/security/vaultwarden
           docker-compose down
           docker-compose up -d --build
           EOF
