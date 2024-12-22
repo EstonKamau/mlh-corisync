@@ -6,8 +6,8 @@ on:
       - main  # Trigger the workflow on changes to the `main` branch
 
 jobs:
-  deploy:
-    name: Deploy to Digital Ocean
+  deploy-streaming:
+    name: Deploy Streaming Services
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout code from GitHub
@@ -35,7 +35,7 @@ jobs:
           fi
           EOF
 
-      - name: Intiate Streaming
+      - name: Initiate Streaming
         run: |
           ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
           cd ~/mlh-corisync/services/streaming
@@ -50,6 +50,19 @@ jobs:
           python3 create_connectors.py
           EOF
 
+  deploy-airflow:
+    name: Deploy Airflow Services
+    runs-on: ubuntu-20.04
+    needs: deploy-streaming  # Ensures this job runs after deploy-streaming
+    if: always()  # Runs even if the previous job fails
+    steps:
+      - name: Set up SSH access
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{secrets.VPS_IP}} >> ~/.ssh/known_hosts
+
       - name: Initiate Airflow
         run: |
           ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
@@ -57,8 +70,21 @@ jobs:
           docker-compose down
           docker-compose up -d --build
           EOF
-      
-      - name: Intiate Security
+
+  deploy-security:
+    name: Deploy Security Services
+    runs-on: ubuntu-20.04
+    needs: deploy-airflow  # Ensures this job runs after deploy-airflow
+    if: always()  # Runs even if the previous job fails
+    steps:
+      - name: Set up SSH access
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{secrets.VPS_IP}} >> ~/.ssh/known_hosts
+
+      - name: Initiate Security
         run: |
           ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
           cd ~/mlh-corisync/services/security/vaultwarden
