@@ -15,7 +15,7 @@ jobs:
   deploy-streaming:
     name: Deploy Streaming Services
     runs-on: ubuntu-20.04
-    if: ${{ always() && (contains(github.event.head_commit.modified, 'services/streaming') || contains(github.event.head_commit.modified, '.github/workflows/.deploy.yml')) }}
+    if: always()
     steps:
       - name: Checkout code from GitHub
         uses: actions/checkout@v4
@@ -61,7 +61,7 @@ jobs:
     name: Deploy Airflow Services
     runs-on: ubuntu-20.04
     needs: deploy-streaming  # Ensures this job runs after deploy-streaming
-    if: ${{ always() && (contains(github.event.head_commit.modified, 'services/batch/airflow') || contains(github.event.head_commit.modified, '.github/workflows/.deploy.yml')) }}
+    if: always()
     steps:
       - name: Set up SSH access
         run: |
@@ -82,7 +82,7 @@ jobs:
     name: Deploy Security Services
     runs-on: ubuntu-20.04
     needs: deploy-airflow  # Ensures this job runs after deploy-airflow
-    if: ${{ always() && (contains(github.event.head_commit.modified, 'services/security/vaultwarden') || contains(github.event.head_commit.modified, '.github/workflows/.deploy.yml')) }}
+    if: always()
     steps:
       - name: Set up SSH access
         run: |
@@ -103,7 +103,7 @@ jobs:
     name: Deploy Metabase Services
     runs-on: ubuntu-20.04
     needs: deploy-security  # Ensures this job runs after deploy-security
-    if: ${{ always() && (contains(github.event.head_commit.modified, 'services/metabase') || contains(github.event.head_commit.modified, '.github/workflows/.deploy.yml')) }}
+    if: always()
     steps:
       - name: Set up SSH access
         run: |
