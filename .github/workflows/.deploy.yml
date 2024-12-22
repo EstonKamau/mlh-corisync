@@ -9,12 +9,13 @@ on:
       - 'services/batch/airflow/**'  # Trigger `deploy-airflow` only if changes are made in the airflow folder
       - 'services/security/vaultwarden/**'  # Trigger `deploy-security` only if changes are made in the security folder
       - 'services/metabase/**' # Trigger `deploy-metabase` only if changes are made in the metabase folder
+      - '.github/workflows/.deploy.yml'  # Trigger for changes to the CI file
 
 jobs:
   deploy-streaming:
     name: Deploy Streaming Services
     runs-on: ubuntu-20.04
-    if: github.event.head_commit.modified | contains('services/streaming')  # Only run if there are changes in the streaming folder
+    if: ${{ always() && (contains(github.event.head_commit.modified, 'services/streaming') || contains(github.event.head_commit.modified, '.github/workflows/.deploy.yml')) }}
     steps:
       - name: Checkout code from GitHub
         uses: actions/checkout@v4
@@ -60,7 +61,7 @@ jobs:
     name: Deploy Airflow Services
     runs-on: ubuntu-20.04
     needs: deploy-streaming  # Ensures this job runs after deploy-streaming
-    if: ${{ always() && (github.event.head_commit.modified, contains('services/batch/airflow')) }}  # Only run if changes are in the airflow folder
+    if: ${{ always() && (contains(github.event.head_commit.modified, 'services/batch/airflow') || contains(github.event.head_commit.modified, '.github/workflows/.deploy.yml')) }}
     steps:
       - name: Set up SSH access
         run: |
@@ -81,7 +82,7 @@ jobs:
     name: Deploy Security Services
     runs-on: ubuntu-20.04
     needs: deploy-airflow  # Ensures this job runs after deploy-airflow
-    if: ${{ always() && (github.event.head_commit.modified , contains('services/security/vaultwarden')) }}  # Only run if changes are in the security folder
+    if: ${{ always() && (contains(github.event.head_commit.modified, 'services/security/vaultwarden') || contains(github.event.head_commit.modified, '.github/workflows/.deploy.yml')) }}
     steps:
       - name: Set up SSH access
         run: |
@@ -99,10 +100,10 @@ jobs:
           EOF
 
   deploy-metabase:
-    name: Deploy Metabse Services
+    name: Deploy Metabase Services
     runs-on: ubuntu-20.04
-    needs: deploy-security  # Ensures this job runs after deploy-airflow
-    if: ${{ always() && (github.event.head_commit.modified , contains('services/metabase')) }}  # Only run if changes are in the security folder
+    needs: deploy-security  # Ensures this job runs after deploy-security
+    if: ${{ always() && (contains(github.event.head_commit.modified, 'services/metabase') || contains(github.event.head_commit.modified, '.github/workflows/.deploy.yml')) }}
     steps:
       - name: Set up SSH access
         run: |
@@ -111,7 +112,7 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{secrets.VPS_IP}} >> ~/.ssh/known_hosts
 
-      - name: Initiate metabse
+      - name: Initiate Metabase
         run: |
           ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
           cd ~/mlh-corisync/services/metabase
