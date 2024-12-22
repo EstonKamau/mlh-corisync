@@ -6,7 +6,7 @@ services:
     container_name: spark-master
     hostname: spark-master
     ports:
-      - "8081:8080"  # Spark Master Web UI
+      - "8082:8080"  # Spark Master Web UI
       - "7077:7077"  # Spark Master RPC Port
     environment:
       - SPARK_MODE=master
