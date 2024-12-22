@@ -108,4 +108,4 @@ docker-compose down
 
 - [Debezium Documentation](https://debezium.io/documentation/)
 - [Debezium Docker Hub](https://hub.docker.com/r/debezium/connect)
-- [Kafka Documentation](https://kafka.apache.org/documentation/)
+- [Kafka Documentation](https://kafka.apache.org/documentation/).
