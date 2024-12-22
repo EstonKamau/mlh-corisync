@@ -8,6 +8,7 @@ on:
       - 'services/streaming/**'  # Trigger `deploy-streaming` only if changes are made in the streaming folder
       - 'services/batch/airflow/**'  # Trigger `deploy-airflow` only if changes are made in the airflow folder
       - 'services/security/vaultwarden/**'  # Trigger `deploy-security` only if changes are made in the security folder
+      - 'services/metabase/**' # Trigger `deploy-metabase` only if changes are made in the metabase folder
 
 jobs:
   deploy-streaming:
@@ -93,6 +94,27 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
           cd ~/mlh-corisync/services/security/vaultwarden
+          docker-compose down
+          docker-compose up -d --build
+          EOF
+
+  deploy-metabase:
+    name: Deploy Security Services
+    runs-on: ubuntu-20.04
+    needs: deploy-security  # Ensures this job runs after deploy-airflow
+    if: ${{ always() && github.event.head_commit.modified | contains('services/metabase') }}  # Only run if changes are in the security folder
+    steps:
+      - name: Set up SSH access
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{secrets.VPS_IP}} >> ~/.ssh/known_hosts
+
+      - name: Initiate metabse
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
+          cd ~/mlh-corisync/services/metabase
           docker-compose down
           docker-compose up -d --build
           EOF
