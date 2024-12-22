@@ -42,3 +42,10 @@ jobs:
           docker-compose down
           docker-compose up -d --build
           EOF
+
+      - name: Initiate Connectors
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
+          cd ~/mlh-corisync/services/streaming/debezium
+          python3 create_connectors.py
+          EOF
