@@ -47,9 +47,16 @@ For RDS instances:
 
 `SELECT * FROM pg_create_logical_replication_slot('debezium_slot', 'pgoutput');`
 
+- Drop publication
+`SELECT pg_drop_replication_slot('debezium_slot');`
+
 - Publication
 
 `CREATE PUBLICATION dbz_publication FOR ALL TABLES;`
+
+- Check publications
+`SELECT * FROM pg_publication;`
+
 
 
 ---

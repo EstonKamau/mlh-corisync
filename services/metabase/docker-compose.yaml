@@ -14,6 +14,8 @@ services:
       MB_DB_HOST: ${MB_DB_HOST}
     ports:
       - "3050:3000"
+    depends_on:
+      - postgres_db
     networks:
       - app-network
 
