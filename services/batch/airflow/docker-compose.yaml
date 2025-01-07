@@ -10,8 +10,8 @@ services:
       - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
       - AIRFLOW__METRICS__STATSD_HOST=statsd-exporter
       - AIRFLOW__METRICS__STATSD_PORT=9125
-      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
-      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5437/airflow
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres:5437/airflow
       - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
       - AIRFLOW__METRICS__STATSD_ON=True
       - AIRFLOW__METRICS__STATSD_PREFIX=airflow
@@ -38,8 +38,8 @@ services:
       - AIRFLOW__METRICS__STATSD_PORT=9125
       - AIRFLOW__METRICS__STATSD_ON=True
       - AIRFLOW__METRICS__STATSD_PREFIX=airflow
-      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
-      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5437/airflow
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres:5437/airflow
       - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
     volumes:
       - ./dags:/opt/airflow/dags
@@ -64,8 +64,8 @@ services:
       - AIRFLOW__METRICS__STATSD_PORT=9125
       - AIRFLOW__METRICS__STATSD_ON=True
       - AIRFLOW__METRICS__STATSD_PREFIX=airflow
-      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
-      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5437/airflow
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres:5437/airflow
       - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
     volumes:
       - ./dags:/opt/airflow/dags
@@ -85,6 +85,8 @@ services:
       - POSTGRES_USER=airflow
       - POSTGRES_PASSWORD=airflow
       - POSTGRES_DB=airflow
+    ports:
+      - "5437"
     volumes:
       - postgres-db:/var/lib/postgresql/data
 

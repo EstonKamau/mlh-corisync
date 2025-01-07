@@ -6,8 +6,8 @@ FROM apache/airflow:2.10.2-python3.10
 ENV AIRFLOW__CORE__EXECUTOR=CeleryExecutor
 ENV AIRFLOW__METRICS__STATSD_HOST=prometheus
 ENV AIRFLOW__METRICS__STATSD_PORT=8125
-ENV AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
-ENV AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres/airflow
+ENV AIRFLOW__CORE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5437/airflow
+ENV AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@postgres:5437/airflow
 
 # Install additional Python packages using pip
 COPY requirements.txt ./
