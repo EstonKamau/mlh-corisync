@@ -32,6 +32,28 @@ CONNECTORS = [
             "topic.creation.default.cleanup.policy": "compact",
             "topic.creation.default.compression.type": "lz4"
         }
+    },
+    {
+        "name": "mlh_production",
+        "config": {
+            "topic.prefix": "tc4a",
+            "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+            "tasks.max": "20",
+            "database.hostname": os.getenv("DB_HOST", "localhost"),
+            "database.port": os.getenv("DB_PORT", "5432"),
+            "database.user": os.getenv("DB_USER", "user"),
+            "database.password": os.getenv("DB_PASSWORD", "password"),
+            "database.dbname": os.getenv("DB_NAME", "db_name"),
+            "database.server.name": "mlh_uat",
+            "plugin.name": "pgoutput",
+            "slot.name": os.getenv("SLOT_NAME", "slot_name"),
+            "schema.include.list": "public",
+            "publication.name": os.getenv("PUBLICATION_NAME", "publication"),
+            "topic.creation.default.replication.factor": 1,
+            "topic.creation.default.partitions": 10,
+            "topic.creation.default.cleanup.policy": "compact",
+            "topic.creation.default.compression.type": "lz4"
+        }
     }
 ]
 
