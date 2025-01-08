@@ -63,9 +63,9 @@ jobs:
     if: always()
     steps:
      - name: Checkout code from GitHub
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+       uses: actions/checkout@v4
+       with:
+        fetch-depth: 0
 
       - name: Set up SSH access
         run: |
@@ -86,7 +86,7 @@ jobs:
             git pull origin main
           fi
           EOF
-          
+
       - name: Initiate Airflow
         run: |
           ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
