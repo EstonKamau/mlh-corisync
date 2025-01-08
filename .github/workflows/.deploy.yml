@@ -67,15 +67,15 @@ jobs:
        with:
         fetch-depth: 0
 
-      - name: Set up SSH access
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{secrets.VPS_IP}} >> ~/.ssh/known_hosts
+     - name: Set up SSH access
+       run: |
+        mkdir -p ~/.ssh
+        echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{secrets.VPS_IP}} >> ~/.ssh/known_hosts
 
-      - name: Ensure repository folder and handle git setup
-        run: |
+     - name: Ensure repository folder and handle git setup
+       run: |
           ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
           mkdir -p ~/mlh-corisync
           cd ~/mlh-corisync
@@ -87,8 +87,8 @@ jobs:
           fi
           EOF
 
-      - name: Initiate Airflow
-        run: |
+     - name: Initiate Airflow
+       run: |
           ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
           cd ~/mlh-corisync/services/batch/airflow
           docker-compose down
