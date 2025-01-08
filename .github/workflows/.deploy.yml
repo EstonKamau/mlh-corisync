@@ -62,6 +62,11 @@ jobs:
     runs-on: ubuntu-20.04
     if: always()
     steps:
+     - name: Checkout code from GitHub
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Set up SSH access
         run: |
           mkdir -p ~/.ssh
@@ -69,6 +74,19 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{secrets.VPS_IP}} >> ~/.ssh/known_hosts
 
+      - name: Ensure repository folder and handle git setup
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
+          mkdir -p ~/mlh-corisync
+          cd ~/mlh-corisync
+          if [ ! -d .git ]; then
+            git clone git@github.com:your-org-or-user/mlh-corisync.git .
+          else
+            git reset --hard
+            git pull origin main
+          fi
+          EOF
+          
       - name: Initiate Airflow
         run: |
           ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
