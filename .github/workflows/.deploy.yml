@@ -5,62 +5,61 @@ on:
     branches:
       - main  # Trigger the workflow on changes to the `main` branch
     paths:
-      - 'services/streaming/**'  # Trigger `deploy-streaming` only if changes are made in the streaming folder
+      # - 'services/streaming/**'  # Trigger `deploy-streaming` only if changes are made in the streaming folder
       - 'services/batch/airflow/**'  # Trigger `deploy-airflow` only if changes are made in the airflow folder
       - 'services/security/vaultwarden/**'  # Trigger `deploy-security` only if changes are made in the security folder
       - 'services/metabase/**' # Trigger `deploy-metabase` only if changes are made in the metabase folder
       - '.github/workflows/.deploy.yml'  # Trigger for changes to the CI file
 
 jobs:
-  deploy-streaming:
-    name: Deploy Streaming Services
-    runs-on: ubuntu-20.04
-    if: always()
-    steps:
-      - name: Checkout code from GitHub
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+  # deploy-streaming:
+  #   name: Deploy Streaming Services
+  #   runs-on: ubuntu-20.04
+  #   if: always()
+  #   steps:
+  #     - name: Checkout code from GitHub
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
 
-      - name: Set up SSH access
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{secrets.VPS_IP}} >> ~/.ssh/known_hosts
+  #     - name: Set up SSH access
+  #       run: |
+  #         mkdir -p ~/.ssh
+  #         echo "${{secrets.SSH_PRIVATE_KEY}}" > ~/.ssh/id_rsa
+  #         chmod 600 ~/.ssh/id_rsa
+  #         ssh-keyscan -H ${{secrets.VPS_IP}} >> ~/.ssh/known_hosts
 
-      - name: Ensure repository folder and handle git setup
-        run: |
-          ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
-          mkdir -p ~/mlh-corisync
-          cd ~/mlh-corisync
-          if [ ! -d .git ]; then
-            git clone git@github.com:your-org-or-user/mlh-corisync.git .
-          else
-            git reset --hard
-            git pull origin main
-          fi
-          EOF
+  #     - name: Ensure repository folder and handle git setup
+  #       run: |
+  #         ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
+  #         mkdir -p ~/mlh-corisync
+  #         cd ~/mlh-corisync
+  #         if [ ! -d .git ]; then
+  #           git clone git@github.com:your-org-or-user/mlh-corisync.git .
+  #         else
+  #           git reset --hard
+  #           git pull origin main
+  #         fi
+  #         EOF
 
-      - name: Initiate Streaming
-        run: |
-          ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
-          cd ~/mlh-corisync/services/streaming
-          docker-compose down
-          docker-compose up -d --build
-          EOF
+  #     - name: Initiate Streaming
+  #       run: |
+  #         ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
+  #         cd ~/mlh-corisync/services/streaming
+  #         docker-compose down
+  #         docker-compose up -d --build
+  #         EOF
 
-      - name: Initiate Connectors
-        run: |
-          ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
-          cd ~/mlh-corisync/services/streaming/debezium
-          python3 create_connectors.py
-          EOF
+  #     - name: Initiate Connectors
+  #       run: |
+  #         ssh -i ~/.ssh/id_rsa ${{secrets.VPS_USERNAME}}@${{secrets.VPS_IP}} <<EOF
+  #         cd ~/mlh-corisync/services/streaming/debezium
+  #         python3 create_connectors.py
+  #         EOF
 
   deploy-airflow:
     name: Deploy Airflow Services
     runs-on: ubuntu-20.04
-    needs: deploy-streaming  # Ensures this job runs after deploy-streaming
     if: always()
     steps:
       - name: Set up SSH access

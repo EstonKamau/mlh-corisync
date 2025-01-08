@@ -5,6 +5,7 @@ services:
     image: debezium/connect:1.9.7.Final
     container_name: debezium
     hostname: debezium
+    restart: always
     depends_on:
       kafka:
         condition: service_healthy

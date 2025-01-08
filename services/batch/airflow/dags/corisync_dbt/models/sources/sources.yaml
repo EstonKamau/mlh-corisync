@@ -1,0 +1,22 @@
+version: 2
+
+sources:
+  - name: mlh_uat
+    database: visualization-app-404406
+    schema: mlh_etl
+    
+    tables:
+    - name: organizations
+      identifier: organization_organization
+
+    - name: events
+      identifier: events_event
+
+    - name: event_enrolment
+      identifier: event_enrolment_eventenrollment
+
+    - name: attendees_details
+      identifier: event_enrolment_eventuser
+
+    - name: cadre
+      identifier: events_event_specialization
