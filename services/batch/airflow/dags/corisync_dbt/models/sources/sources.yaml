@@ -1,9 +1,9 @@
 version: 2
 
 sources:
-  - name: mlh_uat
+  - name: mlh_data_warehouse
     database: visualization-app-404406
-    schema: mlh_etl
+    schema: "{{ var('etl_schema') }}"
     
     tables:
     - name: organizations

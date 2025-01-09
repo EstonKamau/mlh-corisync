@@ -7,6 +7,8 @@ services:
       dockerfile: Dockerfile
     restart: always
     environment:
+      - AIRFLOW__CELERY__WORKER_REFRESH_BATCH_SIZE=0
+      - AIRFLOW__CELERY__WORKER_REFRESH_INTERVAL=0
       - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
       - AIRFLOW__METRICS__STATSD_HOST=statsd-exporter
       - AIRFLOW__METRICS__STATSD_PORT=9125
@@ -15,7 +17,7 @@ services:
       - AIRFLOW__CELERY__BROKER_URL=redis://redis:6379/0
       - AIRFLOW__METRICS__STATSD_ON=True
       - AIRFLOW__METRICS__STATSD_PREFIX=airflow
-      - AIRFLOW__CELERY__WORKER_CONCURRENCY=16
+      - AIRFLOW__CELERY__WORKER_CONCURRENCY=1
     ports:
       - "8088:8080"
     volumes:

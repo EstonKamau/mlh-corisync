@@ -10,4 +10,4 @@ SELECT
     attended,
     completed_date,
     join_time
-FROM {{source("mlh_uat","event_enrolment")}}
+FROM {{source("mlh_data_warehouse","event_enrolment")}}

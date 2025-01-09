@@ -36,5 +36,5 @@ SELECT
     zoom_meeting_id,
     zoom_meeting_pass,
     department_id
-FROM {{source("mlh_uat", "events")}}
+FROM {{source("mlh_data_warehouse", "events")}}
 	

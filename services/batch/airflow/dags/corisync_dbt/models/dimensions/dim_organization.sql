@@ -10,4 +10,4 @@ SELECT
         total_staffs,
         created_at,
         updated_at
-FROM {{source('mlh_uat','organizations')}}
+FROM {{source('mlh_data_warehouse','organizations')}}

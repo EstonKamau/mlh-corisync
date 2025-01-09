@@ -94,4 +94,4 @@ SELECT
     -- other_info__name_of_work_place,
     -- other_info__medical_board_kmpdc_nck_coc_ppbx__v_text,
     -- other_info__phone__v_text
-FROM {{source("mlh_uat","attendees_details")}}
+FROM {{source("mlh_data_warehouse","attendees_details")}}

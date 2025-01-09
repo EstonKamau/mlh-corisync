@@ -18,17 +18,16 @@ with DAG(
     catchup=False,  
 ) as dag:
 
-    # Task to run dbt
-    run_dlt_pipeline = BashOperator(
-        task_id='run_dlt_pipeline',
+    # Task to dlt pipeline
+    run_uat_dlt_pipeline = BashOperator(
+        task_id='run_uat_dlt_pipeline',
         bash_command='cd /opt/airflow/dags && python3 uat_pipeline.py',
     )
 
-    # Task to test dbt
-    run_dbt_models = BashOperator(
-        task_id='run_dbt_models',
-        bash_command='cd /opt/airflow/dags/corisync_dbt && dbt run --profiles-dir profile --target dev',
+    # Task to run dbt
+    run_uat_dbt_models = BashOperator(
+        task_id='run_uat_dbt_models',
+        bash_command='cd /opt/airflow/dags/corisync_dbt && dbt run --vars \'{"etl_schema": "mlh_etl"}\' --profiles-dir profile --target prod',
     )
-
     # Define task dependencies
-    run_dlt_pipeline >> run_dbt_models
+    run_uat_dlt_pipeline >> run_uat_dbt_models

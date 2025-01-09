@@ -1,92 +1,64 @@
 from typing import List
-
 import dlt
-from dlt.sources.credentials import ConnectionStringCredentials
 from dlt.common import pendulum
-
 from sql_database import sql_database, sql_table
 
 
-def load_select_tables_from_database() -> None:
+
+def load_select_uat_tables() -> None:
     """Use the sql_database source to reflect an entire database schema and load select tables from it.
 
     This example sources data from the public Rfam MySQL database.
     """
-    # Create a pipeline
-    pipeline = dlt.pipeline(pipeline_name='mlh_uat', destination='bigquery', dataset_name='mlh_etl')
-
-    # Credentials for the sample database.
-    # Note: It is recommended to configure credentials in `.dlt/secrets.toml` under `sources.sql_database.credentials`
-    # credentials = ConnectionStringCredentials("mysql+pymysql://rfamro@mysql-rfam-public.ebi.ac.uk:4497/Rfam")
+    # Pipeline for uat data
+    uat_pipeline = dlt.pipeline(pipeline_name='mlh_uat', destination='bigquery', dataset_name='mlh_etl')
 
     # Configure the source to load a few select tables incrementally
-    source_1 = sql_database().with_resources('organization_organization',
+    uat_source = sql_database(credentials=dlt.secrets.get('mlh_uat')).with_resources('organization_organization',
                                             'events_event', 
                                             'event_enrolment_eventenrollment', 
                                             'event_enrolment_eventuser')
-    source_1.organization_organization.apply_hints(incremental=dlt.sources.incremental('updated_at'))
-    source_1.events_event.apply_hints(incremental=dlt.sources.incremental('updated_at'))
-    source_1.event_enrolment_eventenrollment.apply_hints(incremental=dlt.sources.incremental('updated_at'))
-    source_1.event_enrolment_eventuser.apply_hints(incremental=dlt.sources.incremental('updated_at'))
-    info = pipeline.run(source_1)
+    
+
+    uat_source.organization_organization.apply_hints(incremental=dlt.sources.incremental('updated_at'))
+    uat_source.events_event.apply_hints(incremental=dlt.sources.incremental('updated_at'))
+    uat_source.event_enrolment_eventenrollment.apply_hints(incremental=dlt.sources.incremental('updated_at'))
+    uat_source.event_enrolment_eventuser.apply_hints(incremental=dlt.sources.incremental('updated_at'))
+    info = uat_pipeline.run(uat_source)
     print(info)
-
-    # Run the pipeline. The merge write disposition merges existing rows in the destination by primary key
-    # source_2 = sql_database().with_resources('inventory', 'products', 'categories')
-    # info = pipeline.run(source_2, write_disposition='replace')
-    # print(info)
-
-    # Load some other tables with replace write disposition. This overwrites the existing tables in destination
-    source_2 = sql_database().with_resources('events_event_specialization')
-    info = pipeline.run(source_2, write_disposition='replace')
-    print(info)
-
-    # Load a table incrementally with append write disposition
-    # this is good when a table only has new rows inserted, but not updated
-    # source_3 = sql_database(credentials).with_resources('genome')
-    # source_3.genome.apply_hints(incremental=dlt.sources.incremental('created'))
-
-    # info = pipeline.run(source_3, write_disposition='append')
-    # print(info)
 
 
 def load_entire_database() -> None:
     """Use the sql_database source to completely load all tables in a database"""
     pipeline = dlt.pipeline(pipeline_name='mlh_uat', destination='bigquery', dataset_name='mlh_etl')
 
-    # By default the sql_database source reflects all tables in the schema
-    # The database credentials are sourced from the `.dlt/secrets.toml` configuration
     source = sql_database()
 
-    # Run the pipeline. For a large db this may take a while
     info = pipeline.run(source, write_disposition="replace")
     print(info)
 
 
 def load_standalone_table_resource() -> None:
     """Load a few known tables with the standalone sql_table resource"""
-    pipeline = dlt.pipeline(pipeline_name='dvdrental', destination='bigquery', dataset_name='dvdrental')
+    pipeline = dlt.pipeline(pipeline_name='uat_standalone_sample', destination='bigquery', dataset_name='mlh_etl')
 
-    # Load a table incrementally starting at a given date
-    # Adding incremental via argument like this makes extraction more efficient
-    # as only rows newer than the start date are fetched from the table
-    family = sql_table(
-        table='family',
+    sample_table_1 = sql_table(
+        table='sample_table_1_name',
         incremental=dlt.sources.incremental('updated', initial_value=pendulum.DateTime(2022, 1, 1, 0, 0, 0))
     )
 
     # Load all data from another table
-    genome = sql_table(table='genome')
+    sample_table_2 = sql_table(table='sample_table_2_name')
 
     # Run the resources together
-    info = pipeline.extract([family, genome], write_disposition='merge')
+    info = pipeline.extract([sample_table_1, sample_table_2], write_disposition='merge')
     print(info)
 
 
 
 if __name__ == '__main__':
     # Load selected tables with different settings
-    load_select_tables_from_database()
+    load_select_uat_tables()
 
     # Load tables with the standalone table resource
     # load_standalone_table_resource()
